@@ -11,9 +11,9 @@ pipeline {
         DOCKERHUB_ID = "choco1992"
         DOCKERHUB_PASSWORD = credentials('dockerhub_password')
         APP_NAME = "ulrich"
-        STG_API_ENDPOINT = "3cca-92-184-118-67.ngrok-free.app:1993"
+        STG_API_ENDPOINT = "3cca-92-184-118-67.ngrok-free.app"
         STG_APP_ENDPOINT = "3cca-92-184-118-67.ngrok-free.app:8080"
-        PROD_API_ENDPOINT = "3cca-92-184-118-67.ngrok-free.app:1993"
+        PROD_API_ENDPOINT = "3cca-92-184-118-67.ngrok-free.app"
         PROD_APP_ENDPOINT = "3cca-92-184-118-67.ngrok-free.app"
         INTERNAL_PORT = "80"
         EXTERNAL_PORT = "${PORT_EXPOSED}"
@@ -82,7 +82,7 @@ pipeline {
           script {
             sh """
               echo  {\\"your_name\\":\\"${APP_NAME}\\",\\"container_image\\":\\"${CONTAINER_IMAGE}\\", \\"external_port\\":\\"${EXTERNAL_PORT}80\\", \\"internal_port\\":\\"${INTERNAL_PORT}\\"}  > data.json 
-              curl -v -X POST http://${STG_API_ENDPOINT}/staging -H 'Content-Type: application/json'  --data-binary @data.json  2>&1 | grep 200
+              curl -k -v -X POST https://${STG_API_ENDPOINT}/staging -H 'Content-Type: application/json'  --data-binary @data.json  2>&1 | grep 200
             """
           }
         }
@@ -98,7 +98,7 @@ pipeline {
           script {
             sh """
               echo  {\\"your_name\\":\\"${APP_NAME}\\",\\"container_image\\":\\"${CONTAINER_IMAGE}\\", \\"external_port\\":\\"${EXTERNAL_PORT}\\", \\"internal_port\\":\\"${INTERNAL_PORT}\\"}  > data.json 
-              curl -v -X POST http://${PROD_API_ENDPOINT}/prod -H 'Content-Type: application/json'  --data-binary @data.json  2>&1 | grep 200
+              curl -k -v -X POST https://${PROD_API_ENDPOINT}/prod -H 'Content-Type: application/json'  --data-binary @data.json  2>&1 | grep 200
             """
           }
        }
