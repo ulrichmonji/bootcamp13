@@ -1,3 +1,6 @@
+/* import shared library */
+@Library('chocoapp-slack-share-library')_
+
 pipeline {
     environment {
         IMAGE_NAME = "ic-webapp"
@@ -81,4 +84,13 @@ pipeline {
         }
 
     }
+
+  post {
+       success {
+         slackSend (color: '#00FF00', message: "ULRICH - FILROUGE - BOOTCAMP13 - SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+         }
+      failure {
+            slackSend (color: '#FF0000', message: "ULRICH - FILROUGE - BOOTCAMP13 - FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+          }   
+    }      
 }
